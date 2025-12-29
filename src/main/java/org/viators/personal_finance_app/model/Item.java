@@ -28,8 +28,12 @@ public class Item extends BaseEntity {
     @Column(name = "brand")
     private String brand;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
 }

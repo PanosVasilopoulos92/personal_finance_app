@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.viators.personal_finance_app.model.enums.UserRolesEnum;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -40,10 +41,10 @@ public class User extends BaseEntity {
     private UserRolesEnum userRole;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Item> items;
+    private List<Item> items = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Category> categories;
+    private List<Category> categories = new ArrayList<>();
 
     // Helper methods
     public void addItem(Item item) {

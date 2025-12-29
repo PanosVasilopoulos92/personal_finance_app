@@ -1,17 +1,10 @@
+server:
+  port: 8888
 spring:
   application:
     name: personal-finance-app
-  datasource:
-    url: jdbc:postgresql://localhost:5432/personal_finance_app
-    username: postgres
-    password: 4H19wP20$$$$
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-#      ddl-auto: create-drop
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-    show-sql: true
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:mysql}  # Reads from .env file, defaults to mysql
+  # Database configuration is now in profile-specific files:
+  # - application-mysql.yml
+  # - application-mysql.yml

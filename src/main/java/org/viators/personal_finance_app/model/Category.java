@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "categories")
 @Getter
@@ -21,6 +24,9 @@ public class Category extends BaseEntity {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private List<Item> items = new ArrayList<>();
 }
