@@ -41,7 +41,7 @@ public class Store extends BaseEntity {
     private String website;
 
     @OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
-    private PriceObservation priceObservation;
+    private List<PriceObservation> priceObservation;
 
     @OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
     private List<ShoppingListItem> shoppingListItems = new ArrayList<>();
