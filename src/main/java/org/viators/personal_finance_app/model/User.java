@@ -40,11 +40,29 @@ public class User extends BaseEntity {
     @Column(name = "user_role")
     private UserRolesEnum userRole;
 
+    @OneToOne(mappedBy = "user")
+    private UserPreferences userPreferences;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Item> items = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Category> categories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<PriceAlert> priceAlerts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<ShoppingList> shoppingLists = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<InflationReport> inflationReports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<PriceComparison> priceComparisons = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Basket> baskets = new ArrayList<>();
 
     // Helper methods
     public void addItem(Item item) {
@@ -60,5 +78,4 @@ public class User extends BaseEntity {
             category.setUser(this);
         }
     }
-
 }

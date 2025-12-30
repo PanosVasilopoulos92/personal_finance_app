@@ -29,4 +29,7 @@ public class Category extends BaseEntity {
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Item> items = new ArrayList<>();
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private List<InflationReport> inflationReports = new ArrayList<>();
 }
