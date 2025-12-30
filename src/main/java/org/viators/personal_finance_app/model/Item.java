@@ -51,15 +51,21 @@ public class Item extends BaseEntity {
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
     private List<PriceComparison> priceComparisons = new ArrayList<>();
 
-    /**
-     * mappedBy = "items" tells JPA that the Basket entity owns the relationship.
-     * The "items" refers to the field name in the Basket class.
-     * <p>
-     * This is the "inverse side" or "non-owning side" of the relationship.
-     * JPA will not create another join table - it uses the one defined in Basket.
-     */
-    @ManyToMany(mappedBy = "items")
-    private List<Basket> baskets = new ArrayList<>();
+    // Simple case
+//    /**
+//     * mappedBy = "items" tells JPA that the Basket entity owns the relationship.
+//     * The "items" refers to the field name in the Basket class.
+//     * <p>
+//     * This is the "inverse side" or "non-owning side" of the relationship.
+//     * JPA will not create another join table - it uses the one defined in Basket.
+//     */
+//    @ManyToMany(mappedBy = "items")
+//    private List<Basket> baskets = new ArrayList<>();
+
+
+    // Approach of creating a new Join Entity to represent the relationship between Item and Basket, plus some extra field
+    @OneToMany(mappedBy = "item", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private List<BasketItem> basketItems = new ArrayList<>();
 
     // Helper methods
     public void addPriceObservation(PriceObservation priceObservation) {
