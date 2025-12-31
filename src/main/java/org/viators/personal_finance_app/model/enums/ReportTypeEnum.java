@@ -3,7 +3,7 @@ package org.viators.personal_finance_app.model.enums;
 import lombok.Getter;
 
 @Getter
-public enum ReportType {
+public enum ReportTypeEnum {
     MONTHLY,
     QUARTERLY,
     YEARLY,
