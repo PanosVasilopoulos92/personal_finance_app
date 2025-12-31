@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.viators.personal_finance_app.model.enums.ReportType;
+import org.viators.personal_finance_app.model.enums.ReportTypeEnum;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,7 +20,7 @@ public class InflationReport extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "report_type", nullable = false)
-    private ReportType reportType;
+    private ReportTypeEnum reportType;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
