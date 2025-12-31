@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(
+        name = "users",
+        indexes = @Index(name = "idx_user_email", columnList = "email")
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -77,5 +80,13 @@ public class User extends BaseEntity {
             this.categories.add(category);
             category.setUser(this);
         }
+    }
+
+    private String getFullName() {
+        return this.firstName.concat(" ").concat(this.lastName);
+    }
+
+    private boolean isAdmin() {
+        return this.userRole.equals(UserRolesEnum.ADMIN);
     }
 }
