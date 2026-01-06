@@ -3,6 +3,7 @@ package org.viators.personal_finance_app.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.NaturalId;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,6 +17,7 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NaturalId
     @Column(name = "uuid", unique = true, nullable = false, updatable = false)
     private String uuid;
 
@@ -51,18 +53,6 @@ public abstract class BaseEntity {
     protected void onUpdate() {
         this.updatedBy = getCurrentUser();
         this.updatedAt = LocalDateTime.now();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BaseEntity that)) return false;
-        return id != null && id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
     }
 
     private String getCurrentUser() {
