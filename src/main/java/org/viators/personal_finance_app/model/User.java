@@ -10,6 +10,15 @@ import org.viators.personal_finance_app.model.enums.UserRolesEnum;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a user in the personal finance application.
+ *
+ * Business Rules Enforced:
+ * - Email must be unique (database constraint + service validation)
+ * - Password is always encrypted (never stored in plain text)
+ * - New users get USER role by default
+ * - Users can be soft-deleted (active = false)
+ */
 @Entity
 @Table(
         name = "users",
@@ -43,7 +52,7 @@ public class User extends BaseEntity {
     @Column(name = "user_role")
     private UserRolesEnum userRole;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserPreferences userPreferences;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -67,6 +76,18 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Basket> baskets = new ArrayList<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User that)) return false;
+        return getUuid() != null && getUuid().equals(that.getUuid());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
     // Helper methods
     public void addItem(Item item) {
         if (item != null) {
@@ -82,11 +103,11 @@ public class User extends BaseEntity {
         }
     }
 
-    private String getFullName() {
+    public String getFullName() {
         return this.firstName.concat(" ").concat(this.lastName);
     }
 
-    private boolean isAdmin() {
+    public boolean isAdmin() {
         return this.userRole.equals(UserRolesEnum.ADMIN);
     }
 }

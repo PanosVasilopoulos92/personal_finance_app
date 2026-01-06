@@ -12,7 +12,7 @@
 	<artifactId>personal-finance-app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>personal-finance-app</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Personal Finance and Price Tracking Application</description>
 	<url/>
 	<licenses>
 		<license/>
