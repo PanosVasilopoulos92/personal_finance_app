@@ -20,7 +20,7 @@ public class PriceAlert extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "alert_type", nullable = false)
-    private AlertTypeEnum alertTypeEnum;
+    private AlertTypeEnum alertType;
 
     @Column(name = "threshold_price")
     private BigDecimal thresholdPrice;

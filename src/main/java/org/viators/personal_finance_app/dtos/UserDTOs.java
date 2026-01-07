@@ -1,15 +1,11 @@
 package org.viators.personal_finance_app.dtos;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.viators.personal_finance_app.model.User;
 import org.viators.personal_finance_app.model.UserPreferences;
 import org.viators.personal_finance_app.model.enums.CurrencyEnum;
-import org.viators.personal_finance_app.model.enums.ReportTypeEnum;
 import org.viators.personal_finance_app.model.enums.UserRolesEnum;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,18 +17,35 @@ public final class UserDTOs {
 
     public record CreateUserRequest(
             @NotBlank(message = "Username is required")
-            @Size(max = 50, min = 3, message = "Username length must be between 3-50 characters")
+            @Size(max = 50, min = 3, message = "username length must be between 3-50 characters")
             String username,
 
             @NotBlank(message = "Email is required")
-            @Email(message = "Not a valid email address")
+            @Email(message = "not a valid email address")
             String email,
+
+            @NotBlank(message = "First name is required")
+            @Size(min = 3, max = 50, message = "first name can be between 3-50 characters")
             String firstName,
+
+            @NotBlank(message = "Last name is required")
+            @Size(min = 3, max = 50, message = "Last name can be between 3-50 characters")
             String lastName,
+
+            @NotBlank(message = "Password is required")
+            @Size(min = 8, max = 100, message = "Password must be between 8-100 characters")
+            @Pattern(
+                    regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$",
+                    message = "Password must contain: digit, lowercase, uppercase, and special character"
+            )
             String password,
             String confirmPassword,
+
+            @Min(value = 0)
+            @Max(value = 141)
             Integer age
     ) {
+        // Compact Constructor
         public CreateUserRequest {
             if (username != null) {
                 username = username.trim();
@@ -45,6 +58,19 @@ public final class UserDTOs {
             if (!password.equals(confirmPassword)) {
                 throw new IllegalArgumentException("Password does not match confirmation password");
             }
+        }
+
+        public User toEntity() {
+            User user = new User();
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setPassword(password); // Service must encrypt this!
+            user.setAge(age);
+            user.setUserRole(UserRolesEnum.USER);
+
+            return user;
         }
     }
 
@@ -94,7 +120,7 @@ public final class UserDTOs {
         }
     }
 
-    public record UserDetailResponse(
+    public record UserDetailsResponse(
             String uuid,
             String username,
             String fullName,
@@ -102,29 +128,17 @@ public final class UserDTOs {
             Boolean isActive,
             UserRolesEnum userRole,
             LocalDateTime createdAt,
-            UserPreferencesSummary userPreferences
+            UserPreferenceDTOs.UserPreferencesSummary userPreferences,
+            List<ItemDTOs.ItemSummary> items,
+            List<CategoryDTOs.CategorySummary> categories,
+            List<PriceAlertDTOs.PriceAlertSummary> priceAlerts,
+            List<ShoppingListDTOs.ShoppingListSummary> shoppingLists,
+            List<InflationReportDTOs.InflationReportSummary> inflationReports,
+            List<BasketDTOs.BasketSummary> baskets
     ) {
 
-        public record UserPreferencesSummary(
-                CurrencyEnum defaultCurrency,
-                String defaultLocation,
-                Boolean notificationEnabled,
-                Boolean emailAlerts,
-                String preferredStoreIds
-        ) {
-            public static UserPreferencesSummary from(UserPreferences userPreferences) {
-                return new UserPreferencesSummary(
-                        userPreferences.getDefaultCurrency(),
-                        userPreferences.getDefaultLocation(),
-                        userPreferences.getNotificationEnabled(),
-                        userPreferences.getEmailAlerts(),
-                        userPreferences.getPreferredStoreIds()
-                );
-            }
-        }
-
-        public static UserDetailResponse from(User user) {
-            return new UserDetailResponse(
+        public static UserDetailsResponse from(User user) {
+            return new UserDetailsResponse(
                     user.getUsername(),
                     user.getUuid(),
                     user.getFirstName().concat(" ").concat(user.getLastName()),
@@ -132,11 +146,16 @@ public final class UserDTOs {
                     user.getStatus().equals("1"),
                     user.getUserRole(),
                     user.getCreatedAt(),
-                    UserPreferencesSummary.from(user.getUserPreferences())
+                    UserPreferenceDTOs.UserPreferencesSummary.from(user.getUserPreferences()),
+                    ItemDTOs.ItemSummary.listOfSummaries(user.getItems()),
+                    CategoryDTOs.CategorySummary.listOfSummaries(user.getCategories()),
+                    PriceAlertDTOs.PriceAlertSummary.listOfSummaries(user.getPriceAlerts()),
+                    ShoppingListDTOs.ShoppingListSummary.listOfSummaries(user.getShoppingLists()),
+                    InflationReportDTOs.InflationReportSummary.listOfSummaries(user.getInflationReports()),
+                    BasketDTOs.BasketSummary.listOfSummaries(user.getBaskets())
             );
         }
+
     }
-
-
 
 }
