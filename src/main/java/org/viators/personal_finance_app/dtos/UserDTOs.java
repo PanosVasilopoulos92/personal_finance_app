@@ -1,14 +1,14 @@
 package org.viators.personal_finance_app.dtos;
 
 import jakarta.validation.constraints.*;
+import org.viators.personal_finance_app.annotations.validators.PasswordMatch;
 import org.viators.personal_finance_app.model.User;
-import org.viators.personal_finance_app.model.UserPreferences;
-import org.viators.personal_finance_app.model.enums.CurrencyEnum;
 import org.viators.personal_finance_app.model.enums.UserRolesEnum;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@PasswordMatch
 public final class UserDTOs {
 
     private UserDTOs() {
@@ -39,24 +39,18 @@ public final class UserDTOs {
                     message = "Password must contain: digit, lowercase, uppercase, and special character"
             )
             String password,
+
+            @NotBlank(message = "Confirm password is required")
             String confirmPassword,
 
-            @Min(value = 0)
-            @Max(value = 141)
+            @Min(value = 1, message = "Age must be at least 1")
+            @Max(value = 141, message = "Age cannot exceed 141")
             Integer age
     ) {
         // Compact Constructor
         public CreateUserRequest {
             if (username != null) {
                 username = username.trim();
-            }
-
-            if (age != null && age <= 0) {
-                throw new IllegalArgumentException("Age cannot be zero or negative");
-            }
-
-            if (!password.equals(confirmPassword)) {
-                throw new IllegalArgumentException("Password does not match confirmation password");
             }
         }
 
