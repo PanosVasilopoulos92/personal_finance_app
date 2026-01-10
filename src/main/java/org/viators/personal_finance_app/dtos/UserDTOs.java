@@ -6,6 +6,7 @@ import org.viators.personal_finance_app.model.User;
 import org.viators.personal_finance_app.model.enums.UserRolesEnum;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @PasswordMatch
@@ -69,17 +70,14 @@ public final class UserDTOs {
     }
 
     public record UpdateUserRequest(
-            @NotBlank(message = "Username is required")
-            @Size(max = 50, min = 3, message = "Username length must be between 3-50 characters")
             String username,
-
-            @NotBlank(message = "Email is required")
-            @Email(message = "Not a valid email address")
             String email,
             String firstName,
             String lastName,
             String password,
             String confirmPassword,
+            @Min(value = 1, message = "Age must be at least 1")
+            @Max(value = 141, message = "Age cannot exceed 141")
             Integer age,
             UserRolesEnum userRole
     ) {
@@ -88,12 +86,13 @@ public final class UserDTOs {
                 username = username.trim();
             }
 
-            if (age != null && age <= 0) {
-                throw new IllegalArgumentException("Age cannot be zero or negative");
+            if ((password != null && confirmPassword != null) && !password.equals(confirmPassword)) {
+                throw new IllegalArgumentException("Password does not match confirmation password");
             }
 
-            if (!password.equals(confirmPassword)) {
-                throw new IllegalArgumentException("Password does not match confirmation password");
+            List<UserRolesEnum> availableRoles = Arrays.stream(UserRolesEnum.values()).toList();
+            if (userRole != null && (!availableRoles.contains(userRole))) {
+                throw new IllegalArgumentException("Not a valid role provided.");
             }
         }
     }
@@ -149,7 +148,14 @@ public final class UserDTOs {
                     BasketDTOs.BasketSummary.listOfSummaries(user.getBaskets())
             );
         }
-
     }
+
+    public record LoginUserRequest(
+            @NotBlank(message = "Email is required")
+            @Email
+            String email,
+            @NotBlank(message = "Password is required")
+            String password
+    ) {}
 
 }
