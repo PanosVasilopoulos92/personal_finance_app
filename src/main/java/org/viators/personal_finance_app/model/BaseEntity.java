@@ -56,7 +56,7 @@ public abstract class BaseEntity {
     }
 
     private String getCurrentUser() {
-        // Todo: implement authorization
+        // Todo: implement authentication
         return "panosV";
     }
 }

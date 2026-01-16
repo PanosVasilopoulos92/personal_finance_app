@@ -10,19 +10,13 @@ import org.viators.personal_finance_app.model.enums.UserRolesEnum;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Represents a user in the personal finance application.
- *
- * Business Rules Enforced:
- * - Email must be unique (database constraint + service validation)
- * - Password is always encrypted (never stored in plain text)
- * - New users get USER role by default
- * - Users can be soft-deleted (active = false)
- */
 @Entity
 @Table(
         name = "users",
-        indexes = @Index(name = "idx_user_email", columnList = "email")
+        indexes = {
+                @Index(name = "idx_user_email", columnList = "email", unique = true),
+                @Index(name = "idx_user_uuid", columnList = "uuid")
+        }
 )
 @Getter
 @Setter

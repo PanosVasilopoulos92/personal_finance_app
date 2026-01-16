@@ -4,7 +4,6 @@ import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
-import org.viators.personal_finance_app.dtos.UserDTOs;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

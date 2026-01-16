@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.viators.personal_finance_app.model.User;
 import org.viators.personal_finance_app.model.enums.UserRolesEnum;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
+
+    Optional<User> findByUuid(String uuid);
 
     boolean existsByEmail(String email);
 
@@ -40,11 +43,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("dateFrom") LocalDateTime dateFrom,
             @Param("dateTo") LocalDateTime dateTo
     );
-
-    @Query("""
-            select u.uuid from User u
-            where u.uuid = :uuid
-            """)
-    UserRolesEnum findUserRoleByUuid(@Param("uuid") String uuid);
 
 }

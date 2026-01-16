@@ -11,12 +11,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.viators.personal_finance_app.dtos.UserDTOs;
+import org.viators.personal_finance_app.dto.user.request.CreateUserRequest;
+import org.viators.personal_finance_app.dto.user.request.UpdateUserPasswordRequest;
+import org.viators.personal_finance_app.dto.user.request.UpdateUserRequest;
+import org.viators.personal_finance_app.dto.user.response.UserSummaryResponse;
 import org.viators.personal_finance_app.exceptions.NotAnAdminException;
 import org.viators.personal_finance_app.model.User;
 import org.viators.personal_finance_app.model.UserPreferences;
 import org.viators.personal_finance_app.model.enums.StatusEnum;
-import org.viators.personal_finance_app.model.enums.UserRolesEnum;
 import org.viators.personal_finance_app.repository.UserRepository;
 
 import java.util.List;
@@ -30,7 +32,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public UserDTOs.UserSummary registerUser(UserDTOs.CreateUserRequest request) {
+    public UserSummaryResponse registerUser(CreateUserRequest request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new EntityExistsException("Email is already in use");
         }
@@ -50,7 +52,7 @@ public class UserService {
         UserPreferences userPreferences = UserPreferences.createDefaultPreferences();
         userToRegister.addUserPreferences(userPreferences);
 
-        UserDTOs.UserSummary userCreated = UserDTOs.UserSummary.from(userRepository.save(userToRegister));
+        UserSummaryResponse userCreated = UserSummaryResponse.from(userRepository.save(userToRegister));
         log.info("Successfully registered user with uuid: {}", userCreated.uuid());
 
         return userCreated;
@@ -61,7 +63,7 @@ public class UserService {
     }
 
     @Transactional
-    public boolean updateUserPassword(String uuid, UserDTOs.UpdateUserPasswordRequest request) {
+    public boolean updateUserPassword(String uuid, UpdateUserPasswordRequest request) {
         User userToUpdate = userRepository.findByUuidAndStatus(uuid, StatusEnum.ACTIVE.getCode()).orElse(null);
 
         if (userToUpdate == null) {
@@ -73,7 +75,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTOs.UserSummary updateUserInfo(String uuid, UserDTOs.UpdateUserRequest updateUserRequest) {
+    public UserSummaryResponse updateUserInfo(String uuid, UpdateUserRequest updateUserRequest) {
         User userToUpdate = userRepository.findByUuidAndStatus(uuid, StatusEnum.ACTIVE.getCode()).orElse(null);
 
         if (userToUpdate == null) {
@@ -81,31 +83,35 @@ public class UserService {
         }
 
         updateUserRequest.updateUser(userToUpdate); // No need to call save() - dirty checking handles it!
-        return UserDTOs.UserSummary.from(userToUpdate);
+        return UserSummaryResponse.from(userToUpdate);
     }
 
     @Transactional
-    public UserDTOs.UserSummary deactivateUser(String uuid) {
+    public UserSummaryResponse deactivateUser(String uuid) {
         User userToDeactivate = userRepository.findByUuidAndStatus(uuid, StatusEnum.ACTIVE.getCode())
                 .orElseThrow(() -> new EntityNotFoundException("User does not exist or is already deactivated"));
 
         userToDeactivate.setStatus(StatusEnum.INACTIVE.getCode());
-        return UserDTOs.UserSummary.from(userToDeactivate);
+        return UserSummaryResponse.from(userToDeactivate);
     }
 
     public User findUserByUuidAndStatus(String uuid, StatusEnum status) {
         return userRepository.findByUuidAndStatus(uuid, status.getCode()).orElse(null);
     }
 
-    public List<UserDTOs.UserSummary> findAllUsers(String uuid) {
-        isUserAnAdmin(uuid);
+    public List<UserSummaryResponse> findAllUsers(String uuid) {
+        User user = userRepository.findByUuid(uuid).orElseThrow(() -> new IllegalArgumentException("Request made for a user that not exist."));
+
+        if (!user.isAdmin()) {
+            throw new NotAnAdminException("User cannot see other users unless is an admin user");
+        }
 
         return userRepository.findAll().stream()
-                .map(UserDTOs.UserSummary::from)
+                .map(UserSummaryResponse::from)
                 .toList();
     }
 
-    public Page<UserDTOs.UserSummary> findAllUsersPaginated(int page, int size, String sortBy, String direction) {
+    public Page<UserSummaryResponse> findAllUsersPaginated(int page, int size, String sortBy, String direction) {
 
         log.debug("Fetching users - page: {}, size: {}", page, size);
 
@@ -116,17 +122,11 @@ public class UserService {
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<User> users= userRepository.findAll(pageable);
 
-        return users.map(UserDTOs.UserSummary::from);
+        return users.map(UserSummaryResponse::from);
     }
 
     public boolean isEmailAvailable(String email) {
         return userRepository.existsByEmail(email);
     }
 
-    private void isUserAnAdmin(String uuid) {
-        UserRolesEnum userRole = userRepository.findUserRoleByUuid(uuid);
-        if (!userRole.equals(UserRolesEnum.ADMIN)) {
-            throw new NotAnAdminException("User cannot see other users unless is an admin user");
-        }
-    }
 }
