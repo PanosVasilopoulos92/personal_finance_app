@@ -14,8 +14,7 @@ import java.util.List;
 @Table(
         name = "stores",
         indexes = @Index(
-                name = "idx_store_name",
-                columnList = "name"
+                name = "idx_store_name", columnList = "store_name"
         )
 )
 @Getter

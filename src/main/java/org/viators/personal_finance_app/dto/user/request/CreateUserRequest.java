@@ -12,6 +12,7 @@ public record CreateUserRequest(
         String username,
 
         @NotBlank(message = "Email is required")
+        @Size(max = 100, message = "Email cannot contain more than 100 characters")
         @Email(message = "not a valid email address")
         String email,
 
@@ -45,15 +46,13 @@ public record CreateUserRequest(
     }
 
     public User toEntity() {
-        User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setPassword(password); // Service must encrypt this!
-        user.setAge(age);
-        user.setUserRole(UserRolesEnum.USER);
-
-        return user;
+        return User.builder()
+                .username(username)
+                .email(email)
+                .firstName(firstName)
+                .lastName(lastName)
+                .password(password)
+                .age(age)
+                .build();
     }
 }

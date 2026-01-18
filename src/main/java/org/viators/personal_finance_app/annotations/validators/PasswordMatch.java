@@ -4,6 +4,8 @@ import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
+import org.viators.personal_finance_app.dto.user.request.CreateUserRequest;
+import org.viators.personal_finance_app.dto.user.request.UpdateUserPasswordRequest;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -21,9 +23,9 @@ public @interface PasswordMatch {
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 
-    class CreateUserPasswordValidator implements ConstraintValidator<PasswordMatch, UserDTOs.CreateUserRequest> {
+    class CreateUserPasswordValidator implements ConstraintValidator<PasswordMatch, CreateUserRequest> {
         @Override
-        public boolean isValid(UserDTOs.CreateUserRequest createUserRequest, ConstraintValidatorContext constraintValidatorContext) {
+        public boolean isValid(CreateUserRequest createUserRequest, ConstraintValidatorContext constraintValidatorContext) {
             if (createUserRequest == null || createUserRequest.password() == null || createUserRequest.confirmPassword() == null) {
                 return true;
             }
@@ -32,9 +34,9 @@ public @interface PasswordMatch {
         }
     }
 
-    class UpdatePasswordValidator implements ConstraintValidator<PasswordMatch, UserDTOs.UpdateUserPasswordRequest> {
+    class UpdatePasswordValidator implements ConstraintValidator<PasswordMatch, UpdateUserPasswordRequest> {
         @Override
-        public boolean isValid(UserDTOs.UpdateUserPasswordRequest req, ConstraintValidatorContext ctx) {
+        public boolean isValid(UpdateUserPasswordRequest req, ConstraintValidatorContext ctx) {
             if (req == null || req.newPassword() == null || req.confirmPassword() == null) {
                 return true;
             }

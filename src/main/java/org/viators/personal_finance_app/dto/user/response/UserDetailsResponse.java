@@ -1,5 +1,12 @@
 package org.viators.personal_finance_app.dto.user.response;
 
+import org.viators.personal_finance_app.dto.basket.response.BasketSummary;
+import org.viators.personal_finance_app.dto.category.response.CategorySummary;
+import org.viators.personal_finance_app.dto.inflationreport.response.InflationReportSummary;
+import org.viators.personal_finance_app.dto.item.response.ItemSummary;
+import org.viators.personal_finance_app.dto.pricealert.response.PriceAlertSummary;
+import org.viators.personal_finance_app.dto.shoppinglist.response.ShoppingListSummary;
+import org.viators.personal_finance_app.dto.userpreferences.response.UserPreferencesSummary;
 import org.viators.personal_finance_app.model.User;
 import org.viators.personal_finance_app.model.enums.UserRolesEnum;
 
@@ -14,13 +21,13 @@ public record UserDetailsResponse(
         Boolean isActive,
         UserRolesEnum userRole,
         LocalDateTime createdAt,
-        UserPreferenceDTOs.UserPreferencesSummary userPreferences,
-        List<ItemDTOs.ItemSummary> items,
-        List<CategoryDTOs.CategorySummary> categories,
-        List<PriceAlertDTOs.PriceAlertSummary> priceAlerts,
-        List<ShoppingListDTOs.ShoppingListSummary> shoppingLists,
-        List<InflationReportDTOs.InflationReportSummary> inflationReports,
-        List<BasketDTOs.BasketSummary> baskets
+        UserPreferencesSummary userPreferences,
+        List<ItemSummary> items,
+        List<CategorySummary> categories,
+        List<PriceAlertSummary> priceAlerts,
+        List<ShoppingListSummary> shoppingLists,
+        List<InflationReportSummary> inflationReports,
+        List<BasketSummary> baskets
 ) {
 
     public static UserDetailsResponse from(User user) {
@@ -32,13 +39,13 @@ public record UserDetailsResponse(
                 user.getStatus().equals("1"),
                 user.getUserRole(),
                 user.getCreatedAt(),
-                UserPreferenceDTOs.UserPreferencesSummary.from(user.getUserPreferences()),
-                ItemDTOs.ItemSummary.listOfSummaries(user.getItems()),
-                CategoryDTOs.CategorySummary.listOfSummaries(user.getCategories()),
-                PriceAlertDTOs.PriceAlertSummary.listOfSummaries(user.getPriceAlerts()),
-                ShoppingListDTOs.ShoppingListSummary.listOfSummaries(user.getShoppingLists()),
-                InflationReportDTOs.InflationReportSummary.listOfSummaries(user.getInflationReports()),
-                BasketDTOs.BasketSummary.listOfSummaries(user.getBaskets())
+                UserPreferencesSummary.from(user.getUserPreferences()),
+                ItemSummary.listOfSummaries(user.getItems()),
+                CategorySummary.listOfSummaries(user.getCategories()),
+                PriceAlertSummary.listOfSummaries(user.getPriceAlerts()),
+                ShoppingListSummary.listOfSummaries(user.getShoppingLists()),
+                InflationReportSummary.listOfSummaries(user.getInflationReports()),
+                BasketSummary.listOfSummaries(user.getBaskets())
         );
     }
 }

@@ -8,3 +8,7 @@ spring:
   # Database configuration is now in profile-specific files:
   # - application-mysql.yml
   # - application-postgres.yml
+
+  security:
+    user:
+      name: user12

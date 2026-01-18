@@ -23,9 +23,9 @@ import org.viators.personal_finance_app.repository.UserRepository;
 
 import java.util.List;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor // used for DI
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -33,6 +33,7 @@ public class UserService {
 
     @Transactional
     public UserSummaryResponse registerUser(CreateUserRequest request) {
+
         if (userRepository.existsByEmail(request.email())) {
             throw new EntityExistsException("Email is already in use");
         }
@@ -95,10 +96,12 @@ public class UserService {
         return UserSummaryResponse.from(userToDeactivate);
     }
 
+    @Transactional(readOnly = true)
     public User findUserByUuidAndStatus(String uuid, StatusEnum status) {
         return userRepository.findByUuidAndStatus(uuid, status.getCode()).orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public List<UserSummaryResponse> findAllUsers(String uuid) {
         User user = userRepository.findByUuid(uuid).orElseThrow(() -> new IllegalArgumentException("Request made for a user that not exist."));
 
@@ -111,6 +114,7 @@ public class UserService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public Page<UserSummaryResponse> findAllUsersPaginated(int page, int size, String sortBy, String direction) {
 
         log.debug("Fetching users - page: {}, size: {}", page, size);
@@ -125,8 +129,15 @@ public class UserService {
         return users.map(UserSummaryResponse::from);
     }
 
+    @Transactional(readOnly = true)
     public boolean isEmailAvailable(String email) {
         return userRepository.existsByEmail(email);
     }
 
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
 }
+
+

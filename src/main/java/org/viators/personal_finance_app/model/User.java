@@ -1,10 +1,8 @@
 package org.viators.personal_finance_app.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.viators.personal_finance_app.model.enums.StatusEnum;
 import org.viators.personal_finance_app.model.enums.UserRolesEnum;
 
 import java.util.ArrayList;
@@ -15,11 +13,14 @@ import java.util.List;
         name = "users",
         indexes = {
                 @Index(name = "idx_user_email", columnList = "email", unique = true),
+                @Index(name = "idx_user_username", columnList = "username", unique = true),
+                @Index(name = "idx_user_lastName", columnList = "lastName", unique = true),
                 @Index(name = "idx_user_uuid", columnList = "uuid")
         }
 )
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
@@ -42,6 +43,7 @@ public class User extends BaseEntity {
     @Column(name = "age")
     private Integer age;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role", nullable = false)
     private UserRolesEnum userRole = UserRolesEnum.USER;
@@ -110,5 +112,9 @@ public class User extends BaseEntity {
 
     public boolean isAdmin() {
         return this.userRole.equals(UserRolesEnum.ADMIN);
+    }
+
+    public boolean isActive() {
+        return this.getStatus().equals(StatusEnum.ACTIVE.getCode());
     }
 }
