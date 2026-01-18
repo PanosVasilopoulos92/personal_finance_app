@@ -12,3 +12,7 @@ spring:
   security:
     user:
       name: user12
+
+jwt:
+  secret: dev-secret-key-minimum-32-characters-long-for-hmac-sha256
+  expiration: 3600000

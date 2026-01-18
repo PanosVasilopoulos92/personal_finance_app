@@ -38,6 +38,11 @@ public class UserPreferences extends BaseEntity {
     // Overloaded constructor
     public UserPreferences(CurrencyEnum defaultCurrency, String defaultLocation, boolean notificationEnabled, boolean emailAlerts, String preferredStoreIds) {
         super();
+        this.defaultCurrency = defaultCurrency;
+        this.defaultLocation = defaultLocation;
+        this.notificationEnabled = notificationEnabled;
+        this.emailAlerts = emailAlerts;
+        this.preferredStoreIds = preferredStoreIds;
     }
 
     public static UserPreferences createDefaultPreferences() {

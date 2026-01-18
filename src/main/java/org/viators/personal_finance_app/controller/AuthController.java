@@ -22,16 +22,7 @@ import org.viators.personal_finance_app.service.UserService;
 @Slf4j
 public class AuthController {
 
-    private final UserService userService;
     private final AuthService authService;
-
-    @PostMapping("/register")
-    public ResponseEntity<UserSummaryResponse> register(
-            @Valid @RequestBody CreateUserRequest request) {
-
-        UserSummaryResponse response = userService.registerUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
 
     @PostMapping("/login")
     public ResponseEntity<UserAuthResponse> login(

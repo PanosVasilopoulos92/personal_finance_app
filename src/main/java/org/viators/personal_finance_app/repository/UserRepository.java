@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import org.viators.personal_finance_app.model.User;
 import org.viators.personal_finance_app.model.enums.UserRolesEnum;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -42,4 +41,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("dateTo") LocalDateTime dateTo
     );
 
+    @Query("""
+            select u from User u
+            left join fetch u.inflationReports
+            left join fetch u.baskets
+            left join fetch u.categories
+            left join fetch u.items
+            left join fetch u.priceAlerts
+            left join fetch u.shoppingLists
+            left join fetch u.priceComparisons
+            left join fetch u.userPreferences
+            where u.uuid = :uuid""")
+    Optional<User> findUserByUuidWithAllRelationships(@Param("uuid") String uuid);
 }

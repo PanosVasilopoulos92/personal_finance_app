@@ -1,6 +1,5 @@
 package org.viators.personal_finance_app.service;
 
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.viators.personal_finance_app.dto.user.request.CreateUserRequest;
 import org.viators.personal_finance_app.dto.user.request.UpdateUserPasswordRequest;
 import org.viators.personal_finance_app.dto.user.request.UpdateUserRequest;
+import org.viators.personal_finance_app.dto.user.response.UserDetailsResponse;
 import org.viators.personal_finance_app.dto.user.response.UserSummaryResponse;
-import org.viators.personal_finance_app.exceptions.NotAnAdminException;
+import org.viators.personal_finance_app.exceptions.BusinessException;
+import org.viators.personal_finance_app.exceptions.DuplicateResourceException;
 import org.viators.personal_finance_app.model.User;
 import org.viators.personal_finance_app.model.UserPreferences;
 import org.viators.personal_finance_app.model.enums.StatusEnum;
@@ -35,11 +36,11 @@ public class UserService {
     public UserSummaryResponse registerUser(CreateUserRequest request) {
 
         if (userRepository.existsByEmail(request.email())) {
-            throw new EntityExistsException("Email is already in use");
+            throw new DuplicateResourceException("Email is already in use");
         }
 
         if (userRepository.existsByUsername(request.username())) {
-            throw new EntityExistsException("Username is already in use");
+            throw new DuplicateResourceException("Username is already in use");
         }
 
         if (request.age() < 13) {
@@ -103,10 +104,11 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<UserSummaryResponse> findAllUsers(String uuid) {
-        User user = userRepository.findByUuid(uuid).orElseThrow(() -> new IllegalArgumentException("Request made for a user that not exist."));
+        User user = userRepository.findByUuid(uuid).orElseThrow(() ->
+                new IllegalArgumentException("Request made for a user that not exist."));
 
         if (!user.isAdmin()) {
-            throw new NotAnAdminException("User cannot see other users unless is an admin user");
+            throw new BusinessException("User cannot see other users unless is an admin user");
         }
 
         return userRepository.findAll().stream()
@@ -134,8 +136,23 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
+    // Used for auth request in auth service
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
+    }
+
+    public UserDetailsResponse findUserByUuidWithAllRelationships(String uuid) {
+        User result = userRepository.findUserByUuidWithAllRelationships(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("No user found with this uuid"));
+
+        return UserDetailsResponse.from(result);
+    }
+
+    public UserSummaryResponse findUserByUuid(String uuid) {
+        User result =  userRepository.findByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("No user found with this uuid"));
+
+        return UserSummaryResponse.from(result);
     }
 
 }

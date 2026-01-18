@@ -27,7 +27,7 @@ public class AuthService {
             throw new InvalidCredentialsException("No user found with this email");
         }
 
-        if (!passwordEncoder.matches(userToAuthenticate.getPassword(), request.password())) {
+        if (!passwordEncoder.matches(request.password(), userToAuthenticate.getPassword())) {
             throw new InvalidCredentialsException("Invalid email or password");
         }
 

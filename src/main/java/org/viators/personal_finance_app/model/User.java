@@ -1,7 +1,11 @@
 package org.viators.personal_finance_app.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.viators.personal_finance_app.model.enums.StatusEnum;
 import org.viators.personal_finance_app.model.enums.UserRolesEnum;
 
@@ -20,7 +24,7 @@ import java.util.List;
 )
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
