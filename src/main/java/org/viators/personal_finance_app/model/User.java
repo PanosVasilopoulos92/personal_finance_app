@@ -1,10 +1,7 @@
 package org.viators.personal_finance_app.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.viators.personal_finance_app.model.enums.StatusEnum;
 import org.viators.personal_finance_app.model.enums.UserRolesEnum;
