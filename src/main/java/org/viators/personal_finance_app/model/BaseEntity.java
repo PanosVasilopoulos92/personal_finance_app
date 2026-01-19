@@ -32,6 +32,10 @@ public abstract class BaseEntity {
     @Column(name = "uuid", unique = true, nullable = false, updatable = false)
     private String uuid;
 
+    @Version
+    @Column(name = "version")
+    private Long version;
+
     @CreatedBy
     @Column(name = "created_by", nullable = false, updatable = false)
     private String createdBy;
