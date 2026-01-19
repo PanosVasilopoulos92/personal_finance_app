@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 public class PersonalFinanceAppApplication {
 
 	public static void main(String[] args) {
-		// Load .env file
 		loadEnvFile();
 
 		SpringApplication.run(PersonalFinanceAppApplication.class, args);

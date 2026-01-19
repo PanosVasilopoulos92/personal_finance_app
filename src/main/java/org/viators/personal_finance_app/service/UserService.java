@@ -1,6 +1,5 @@
 package org.viators.personal_finance_app.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -17,6 +16,7 @@ import org.viators.personal_finance_app.dto.user.response.UserDetailsResponse;
 import org.viators.personal_finance_app.dto.user.response.UserSummaryResponse;
 import org.viators.personal_finance_app.exceptions.BusinessException;
 import org.viators.personal_finance_app.exceptions.DuplicateResourceException;
+import org.viators.personal_finance_app.exceptions.ResourceNotFoundException;
 import org.viators.personal_finance_app.model.User;
 import org.viators.personal_finance_app.model.UserPreferences;
 import org.viators.personal_finance_app.model.enums.StatusEnum;
@@ -69,7 +69,7 @@ public class UserService {
         User userToUpdate = userRepository.findByUuidAndStatus(uuid, StatusEnum.ACTIVE.getCode()).orElse(null);
 
         if (userToUpdate == null) {
-            throw new EntityNotFoundException(String.format("User with uuid: %s does not exist", uuid));
+            throw new ResourceNotFoundException(String.format("User with uuid: %s does not exist", uuid));
         }
 
         userToUpdate.setPassword(encryptPassword(request.newPassword()));
@@ -78,23 +78,19 @@ public class UserService {
 
     @Transactional
     public UserSummaryResponse updateUserInfo(String uuid, UpdateUserRequest updateUserRequest) {
-        User userToUpdate = userRepository.findByUuidAndStatus(uuid, StatusEnum.ACTIVE.getCode()).orElse(null);
-
-        if (userToUpdate == null) {
-            throw new EntityNotFoundException(String.format("User with uuid: %s does not exist", uuid));
-        }
+        User userToUpdate = userRepository.findByUuidAndStatus(uuid, StatusEnum.ACTIVE.getCode())
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("User with uuid: %s does not exist or is inactive", uuid)));
 
         updateUserRequest.updateUser(userToUpdate); // No need to call save() - dirty checking handles it!
         return UserSummaryResponse.from(userToUpdate);
     }
 
     @Transactional
-    public UserSummaryResponse deactivateUser(String uuid) {
+    public void deactivateUser(String uuid) {
         User userToDeactivate = userRepository.findByUuidAndStatus(uuid, StatusEnum.ACTIVE.getCode())
-                .orElseThrow(() -> new EntityNotFoundException("User does not exist or is already deactivated"));
+                .orElseThrow(() -> new ResourceNotFoundException("User does not exist or is already deactivated"));
 
         userToDeactivate.setStatus(StatusEnum.INACTIVE.getCode());
-        return UserSummaryResponse.from(userToDeactivate);
     }
 
     @Transactional(readOnly = true)
@@ -105,7 +101,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<UserSummaryResponse> findAllUsers(String uuid) {
         User user = userRepository.findByUuid(uuid).orElseThrow(() ->
-                new IllegalArgumentException("Request made for a user that not exist."));
+                new ResourceNotFoundException("Request made from a user that does not exist."));
 
         if (!user.isAdmin()) {
             throw new BusinessException("User cannot see other users unless is an admin user");
@@ -143,18 +139,16 @@ public class UserService {
 
     public UserDetailsResponse findUserByUuidWithAllRelationships(String uuid) {
         User result = userRepository.findUserByUuidWithAllRelationships(uuid)
-                .orElseThrow(() -> new EntityNotFoundException("No user found with this uuid"));
+                .orElseThrow(() -> new ResourceNotFoundException("No user found with this uuid"));
 
         return UserDetailsResponse.from(result);
     }
 
     public UserSummaryResponse findUserByUuid(String uuid) {
         User result =  userRepository.findByUuid(uuid)
-                .orElseThrow(() -> new EntityNotFoundException("No user found with this uuid"));
+                .orElseThrow(() -> new ResourceNotFoundException("No user found with this uuid"));
 
         return UserSummaryResponse.from(result);
     }
 
 }
-
-

@@ -1,6 +1,5 @@
 package org.viators.personal_finance_app.service;
 
-import jakarta.persistence.EntityExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,8 @@ import org.viators.personal_finance_app.repository.UserRepository;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -139,11 +139,9 @@ public class UserServiceTest {
                 .thenReturn(Optional.ofNullable(testUser));
 
         System.out.println(testUser.getStatus());
-        UserSummaryResponse response = userService.deactivateUser("550e8400-e29b-41d4-a716-446655440000");
+        userService.deactivateUser("550e8400-e29b-41d4-a716-446655440000");
         System.out.println(testUser.getStatus());
-        System.out.println(response);
 
-        assertThat(response).isNotNull();
-        assertThat(response.status()).isEqualTo(StatusEnum.INACTIVE.getCode());
+        assertThat(testUser.getStatus()).isEqualTo(StatusEnum.INACTIVE.getCode());
     }
 }
