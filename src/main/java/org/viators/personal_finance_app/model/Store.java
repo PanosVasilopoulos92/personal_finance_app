@@ -23,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Store extends BaseEntity {
 
-    @Column(name = "store_name", nullable = false)
+    @Column(name = "store_name", nullable = false, unique = true)
     private String name;
 
     @Column(name = "store_type", nullable = false)
@@ -53,4 +53,16 @@ public class Store extends BaseEntity {
 
     @OneToMany(mappedBy = "bestStore", fetch = FetchType.LAZY)
     private List<PriceComparison> priceComparisons = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Store that)) return false;
+        return getUuid() != null && getUuid().equals(that.getUuid());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

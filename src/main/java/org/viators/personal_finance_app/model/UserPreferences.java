@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.viators.personal_finance_app.model.enums.CurrencyEnum;
+import org.viators.personal_finance_app.model.enums.LanguageEnum;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_preferences")
@@ -16,11 +20,15 @@ import org.viators.personal_finance_app.model.enums.CurrencyEnum;
 public class UserPreferences extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "default_currency", nullable = false)
-    private CurrencyEnum defaultCurrency;
+    @Column(name = "currency", nullable = false)
+    private CurrencyEnum currency;
 
-    @Column(name = "default_location", nullable = false)
-    private String defaultLocation;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "language", nullable = false)
+    private LanguageEnum language;
+
+    @Column(name = "location", nullable = false)
+    private String location;
 
     @Column(name = "notification_enabled", nullable = false)
     private Boolean notificationEnabled;
@@ -28,30 +36,33 @@ public class UserPreferences extends BaseEntity {
     @Column(name = "email_alerts", nullable = false)
     private Boolean emailAlerts;
 
-    @Column(name = "preferred_store_ids")
-    private String preferredStoreIds;
+    @ManyToMany()
+    @JoinTable(
+            name = "user_preferred_stores",
+            joinColumns = @JoinColumn(name = "user_preference_id"),
+            inverseJoinColumns = @JoinColumn(name = "store_id")
+    )
+    private Set<Store> preferredStores = new HashSet<>();
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     // Overloaded constructor
-    public UserPreferences(CurrencyEnum defaultCurrency, String defaultLocation, boolean notificationEnabled, boolean emailAlerts, String preferredStoreIds) {
+    public UserPreferences(CurrencyEnum currency, String location, boolean notificationEnabled, boolean emailAlerts) {
         super();
-        this.defaultCurrency = defaultCurrency;
-        this.defaultLocation = defaultLocation;
+        this.currency = currency;
+        this.location = location;
         this.notificationEnabled = notificationEnabled;
         this.emailAlerts = emailAlerts;
-        this.preferredStoreIds = preferredStoreIds;
     }
 
     public static UserPreferences createDefaultPreferences() {
         return new UserPreferences(
                 CurrencyEnum.EUR,
                 "",
-                true,
-                true,
-                ""
+                false,
+                false
         );
     }
 }

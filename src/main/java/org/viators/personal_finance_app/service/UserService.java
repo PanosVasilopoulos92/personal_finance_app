@@ -14,6 +14,8 @@ import org.viators.personal_finance_app.dto.user.request.UpdateUserPasswordReque
 import org.viators.personal_finance_app.dto.user.request.UpdateUserRequest;
 import org.viators.personal_finance_app.dto.user.response.UserDetailsResponse;
 import org.viators.personal_finance_app.dto.user.response.UserSummaryResponse;
+import org.viators.personal_finance_app.dto.userpreferences.request.UpdatePreferredStores;
+import org.viators.personal_finance_app.dto.userpreferences.response.UserPreferencesSummary;
 import org.viators.personal_finance_app.exceptions.BusinessException;
 import org.viators.personal_finance_app.exceptions.DuplicateResourceException;
 import org.viators.personal_finance_app.exceptions.ResourceNotFoundException;
