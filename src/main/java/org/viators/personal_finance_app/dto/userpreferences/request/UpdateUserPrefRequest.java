@@ -1,5 +1,6 @@
 package org.viators.personal_finance_app.dto.userpreferences.request;
 
+import lombok.Builder;
 import org.viators.personal_finance_app.model.UserPreferences;
 import org.viators.personal_finance_app.model.enums.CurrencyEnum;
 import org.viators.personal_finance_app.model.enums.LanguageEnum;
@@ -7,6 +8,7 @@ import org.viators.personal_finance_app.model.enums.LanguageEnum;
 import java.util.List;
 import java.util.Optional;
 
+@Builder
 public record UpdateUserPrefRequest(
         CurrencyEnum currency,
         LanguageEnum language,
@@ -18,11 +20,11 @@ public record UpdateUserPrefRequest(
         List<CurrencyEnum> availableCurrencies = List.of(CurrencyEnum.values());
         List<LanguageEnum> availableLanguages = List.of(LanguageEnum.values());
 
-        if (!availableCurrencies.contains(currency)) {
+        if (currency != null && !availableCurrencies.contains(currency)) {
             throw new IllegalArgumentException("Not a valid currency provided");
         }
 
-        if (!availableLanguages.contains(language)) {
+        if (language != null && !availableLanguages.contains(language)) {
             throw new IllegalArgumentException("Not a valid language provided");
         }
     }

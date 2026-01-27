@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.annotation.CreatedBy;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
+@ToString
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 

@@ -7,8 +7,8 @@ import org.viators.personal_finance_app.model.enums.CurrencyEnum;
 import java.util.Set;
 
 public record UserPreferencesSummary(
-        CurrencyEnum defaultCurrency,
-        String defaultLocation,
+        CurrencyEnum currency,
+        String location,
         Boolean notificationEnabled,
         Boolean emailAlerts,
         Set<StoreSummary> preferredStoreIds

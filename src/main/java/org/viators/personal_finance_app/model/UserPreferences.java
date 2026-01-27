@@ -1,10 +1,8 @@
 package org.viators.personal_finance_app.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.viators.personal_finance_app.model.enums.CurrencyEnum;
 import org.viators.personal_finance_app.model.enums.LanguageEnum;
 
@@ -17,6 +15,8 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
+@ToString
 public class UserPreferences extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
@@ -42,6 +42,7 @@ public class UserPreferences extends BaseEntity {
             joinColumns = @JoinColumn(name = "user_preference_id"),
             inverseJoinColumns = @JoinColumn(name = "store_id")
     )
+    @Builder.Default
     private Set<Store> preferredStores = new HashSet<>();
 
     @OneToOne
