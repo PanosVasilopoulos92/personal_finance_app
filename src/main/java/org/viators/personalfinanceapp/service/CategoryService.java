@@ -35,7 +35,7 @@ public class CategoryService {
     }
 
     /**
-     * Gets paginated items for a currentUser.
+     * Gets paginated items for a user.
      *
      * <p> Page.map() method transforms each Category entity to an CategorySummaryResponse DTO
      * while preserving all pagination metadata (total elements, page info, etc.).</p>

@@ -44,9 +44,9 @@ public class User extends BaseEntity {
     @Column(name = "age")
     private Integer age;
 
-    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role", nullable = false)
+    @Builder.Default
     private UserRolesEnum userRole = UserRolesEnum.USER;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -56,6 +56,7 @@ public class User extends BaseEntity {
     private List<Item> items = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Category> categories = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
