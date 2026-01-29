@@ -5,7 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.viators.personalfinanceapp.security.UserDetailsImpl;
 
-@Component
+@Component(value = "userSecurity")
 public class UserSecurity {
 
     public boolean isSelf(String uuid) {
@@ -16,6 +16,7 @@ public class UserSecurity {
         }
 
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
-        return (userDetails.getUsername() != null && userDetails.getUsername().equals(uuid));
+        if (userDetails == null) return false;
+        return userDetails.getUsername().equals(uuid);
     }
 }

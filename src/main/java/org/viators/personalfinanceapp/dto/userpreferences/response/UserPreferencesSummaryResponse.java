@@ -1,25 +1,25 @@
 package org.viators.personalfinanceapp.dto.userpreferences.response;
 
-import org.viators.personalfinanceapp.dto.store.response.StoreSummary;
+import org.viators.personalfinanceapp.dto.store.response.StoreSummaryResponse;
 import org.viators.personalfinanceapp.model.UserPreferences;
 import org.viators.personalfinanceapp.model.enums.CurrencyEnum;
 
 import java.util.Set;
 
-public record UserPreferencesSummary(
+public record UserPreferencesSummaryResponse(
         CurrencyEnum currency,
         String location,
         Boolean notificationEnabled,
         Boolean emailAlerts,
-        Set<StoreSummary> preferredStoreIds
+        Set<StoreSummaryResponse> preferredStoreIds
 ) {
-    public static UserPreferencesSummary from(UserPreferences userPreferences) {
-        return new UserPreferencesSummary(
+    public static UserPreferencesSummaryResponse from(UserPreferences userPreferences) {
+        return new UserPreferencesSummaryResponse(
                 userPreferences.getCurrency(),
                 userPreferences.getLocation(),
                 userPreferences.getNotificationEnabled(),
                 userPreferences.getEmailAlerts(),
-                StoreSummary.fromList(userPreferences.getPreferredStores())
+                StoreSummaryResponse.fromList(userPreferences.getPreferredStores())
         );
     }
 }

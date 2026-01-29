@@ -1,7 +1,5 @@
 package org.viators.personalfinanceapp.security;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,25 +13,21 @@ import java.util.List;
 /**
  * Adapter for User entity
  */
-@RequiredArgsConstructor
-@Getter
-public class UserDetailsImpl implements UserDetails {
-
-    private final User user;
+public record UserDetailsImpl(User currentUser) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getUserRole()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + currentUser.getUserRole()));
     }
 
     @Override
     public @Nullable String getPassword() {
-        return user.getPassword();
+        return currentUser.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUuid();
+        return currentUser.getUuid();
     }
 
     @Override
@@ -53,6 +47,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.isActive();
+        return currentUser.isActive();
     }
 }

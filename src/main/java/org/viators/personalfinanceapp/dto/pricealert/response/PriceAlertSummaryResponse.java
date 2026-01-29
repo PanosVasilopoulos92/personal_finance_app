@@ -6,22 +6,22 @@ import org.viators.personalfinanceapp.model.enums.AlertTypeEnum;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record PriceAlertSummary(
+public record PriceAlertSummaryResponse(
         AlertTypeEnum alertType,
         LocalDateTime lastTriggeredAt,
         String itemName
 ) {
-    public static PriceAlertSummary from(PriceAlert priceAlert) {
-        return new PriceAlertSummary(
+    public static PriceAlertSummaryResponse from(PriceAlert priceAlert) {
+        return new PriceAlertSummaryResponse(
                 priceAlert.getAlertType(),
                 priceAlert.getLastTriggeredAt(),
                 priceAlert.getItem().getName()
         );
     }
 
-    public static List<PriceAlertSummary> listOfSummaries(List<PriceAlert> priceAlerts) {
+    public static List<PriceAlertSummaryResponse> listOfSummaries(List<PriceAlert> priceAlerts) {
         return priceAlerts.stream()
-                .map(PriceAlertSummary::from)
+                .map(PriceAlertSummaryResponse::from)
                 .toList();
     }
 }

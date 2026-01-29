@@ -4,23 +4,23 @@ import org.viators.personalfinanceapp.model.ShoppingList;
 
 import java.util.List;
 
-public record ShoppingListSummary(
+public record ShoppingListSummaryResponse(
         String name,
         String description,
         int numberOfItems
 ) {
 
-    public static ShoppingListSummary from(ShoppingList shoppingList) {
-        return new ShoppingListSummary(
+    public static ShoppingListSummaryResponse from(ShoppingList shoppingList) {
+        return new ShoppingListSummaryResponse(
                 shoppingList.getName(),
                 shoppingList.getDescription(),
                 shoppingList.getShoppingListItems().size()
         );
     }
 
-    public static List<ShoppingListSummary> listOfSummaries(List<ShoppingList> shoppingLists) {
+    public static List<ShoppingListSummaryResponse> listOfSummaries(List<ShoppingList> shoppingLists) {
         return shoppingLists.stream()
-                .map(ShoppingListSummary::from)
+                .map(ShoppingListSummaryResponse::from)
                 .toList();
     }
 }

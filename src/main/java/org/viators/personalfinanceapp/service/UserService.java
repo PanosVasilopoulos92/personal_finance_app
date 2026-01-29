@@ -3,9 +3,7 @@ package org.viators.personalfinanceapp.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,15 +111,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserSummaryResponse> findAllUsersPaginated(int page, int size, String sortBy, String direction) {
+    public Page<UserSummaryResponse> findAllUsersPaginated(Pageable pageable) {
 
-        log.debug("Fetching users - page: {}, size: {}", page, size);
-
-        Sort sort = direction.equalsIgnoreCase("DESC")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
-
-        Pageable pageable = PageRequest.of(page, size, sort);
         Page<User> users= userRepository.findAll(pageable);
 
         return users.map(UserSummaryResponse::from);

@@ -8,7 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.viators.personalfinanceapp.dto.userpreferences.request.UpdateUserPrefRequest;
-import org.viators.personalfinanceapp.dto.userpreferences.response.UserPreferencesSummary;
+import org.viators.personalfinanceapp.dto.userpreferences.response.UserPreferencesSummaryResponse;
 import org.viators.personalfinanceapp.exceptions.ResourceNotFoundException;
 import org.viators.personalfinanceapp.model.User;
 import org.viators.personalfinanceapp.model.UserPreferences;
@@ -81,7 +81,7 @@ public class UserPreferencesServiceTest {
 
         System.out.println(userPreferences);
         // Act
-        UserPreferencesSummary result = userPreferencesService.updateUserPrefs(userUuid, updateUserPrefRequest);
+        UserPreferencesSummaryResponse result = userPreferencesService.updateUserPrefs(userUuid, updateUserPrefRequest);
         System.out.println(result);
 
         // Assert

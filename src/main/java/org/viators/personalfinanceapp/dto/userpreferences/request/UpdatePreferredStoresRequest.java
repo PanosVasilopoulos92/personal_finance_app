@@ -1,6 +1,6 @@
 package org.viators.personalfinanceapp.dto.userpreferences.request;
 
-public record UpdatePreferredStores(
+public record UpdatePreferredStoresRequest(
         String uuid
 ) {
 }

@@ -1,12 +1,12 @@
 package org.viators.personalfinanceapp.dto.user.response;
 
-import org.viators.personalfinanceapp.dto.basket.response.BasketSummary;
-import org.viators.personalfinanceapp.dto.category.response.CategorySummary;
-import org.viators.personalfinanceapp.dto.inflationreport.response.InflationReportSummary;
-import org.viators.personalfinanceapp.dto.item.response.ItemSummary;
-import org.viators.personalfinanceapp.dto.pricealert.response.PriceAlertSummary;
-import org.viators.personalfinanceapp.dto.shoppinglist.response.ShoppingListSummary;
-import org.viators.personalfinanceapp.dto.userpreferences.response.UserPreferencesSummary;
+import org.viators.personalfinanceapp.dto.basket.response.BasketSummaryResponse;
+import org.viators.personalfinanceapp.dto.category.response.CategorySummaryResponse;
+import org.viators.personalfinanceapp.dto.inflationreport.response.InflationReportSummaryResponse;
+import org.viators.personalfinanceapp.dto.item.response.ItemSummaryResponse;
+import org.viators.personalfinanceapp.dto.pricealert.response.PriceAlertSummaryResponse;
+import org.viators.personalfinanceapp.dto.shoppinglist.response.ShoppingListSummaryResponse;
+import org.viators.personalfinanceapp.dto.userpreferences.response.UserPreferencesSummaryResponse;
 import org.viators.personalfinanceapp.model.User;
 import org.viators.personalfinanceapp.model.enums.UserRolesEnum;
 
@@ -21,13 +21,13 @@ public record UserDetailsResponse(
         Boolean isActive,
         UserRolesEnum userRole,
         LocalDateTime createdAt,
-        UserPreferencesSummary userPreferences,
-        List<ItemSummary> items,
-        List<CategorySummary> categories,
-        List<PriceAlertSummary> priceAlerts,
-        List<ShoppingListSummary> shoppingLists,
-        List<InflationReportSummary> inflationReports,
-        List<BasketSummary> baskets
+        UserPreferencesSummaryResponse userPreferences,
+        List<ItemSummaryResponse> items,
+        List<CategorySummaryResponse> categories,
+        List<PriceAlertSummaryResponse> priceAlerts,
+        List<ShoppingListSummaryResponse> shoppingLists,
+        List<InflationReportSummaryResponse> inflationReports,
+        List<BasketSummaryResponse> baskets
 ) {
 
     public static UserDetailsResponse from(User user) {
@@ -39,13 +39,13 @@ public record UserDetailsResponse(
                 user.getStatus().equals("1"),
                 user.getUserRole(),
                 user.getCreatedAt(),
-                UserPreferencesSummary.from(user.getUserPreferences()),
-                ItemSummary.listOfSummaries(user.getItems()),
-                CategorySummary.listOfSummaries(user.getCategories()),
-                PriceAlertSummary.listOfSummaries(user.getPriceAlerts()),
-                ShoppingListSummary.listOfSummaries(user.getShoppingLists()),
-                InflationReportSummary.listOfSummaries(user.getInflationReports()),
-                BasketSummary.listOfSummaries(user.getBaskets())
+                UserPreferencesSummaryResponse.from(user.getUserPreferences()),
+                ItemSummaryResponse.listOfSummaries(user.getItems()),
+                CategorySummaryResponse.listOfSummaries(user.getCategories()),
+                PriceAlertSummaryResponse.listOfSummaries(user.getPriceAlerts()),
+                ShoppingListSummaryResponse.listOfSummaries(user.getShoppingLists()),
+                InflationReportSummaryResponse.listOfSummaries(user.getInflationReports()),
+                BasketSummaryResponse.listOfSummaries(user.getBaskets())
         );
     }
 }

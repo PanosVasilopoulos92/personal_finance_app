@@ -7,15 +7,15 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-public record InflationReportSummary(
+public record InflationReportSummaryResponse(
         ReportTypeEnum reportType,
         String categoryName,
         LocalDate startDate,
         LocalDate endDate,
         BigDecimal inflationRate
 ) {
-    public static InflationReportSummary from(InflationReport inflationReport) {
-        return new InflationReportSummary(
+    public static InflationReportSummaryResponse from(InflationReport inflationReport) {
+        return new InflationReportSummaryResponse(
                 inflationReport.getReportType(),
                 inflationReport.getCategory().getName(),
                 inflationReport.getStartDate(),
@@ -24,9 +24,9 @@ public record InflationReportSummary(
         );
     }
 
-    public static List<InflationReportSummary> listOfSummaries(List<InflationReport> inflationReports) {
+    public static List<InflationReportSummaryResponse> listOfSummaries(List<InflationReport> inflationReports) {
         return inflationReports.stream()
-                .map(InflationReportSummary::from)
+                .map(InflationReportSummaryResponse::from)
                 .toList();
     }
 }
