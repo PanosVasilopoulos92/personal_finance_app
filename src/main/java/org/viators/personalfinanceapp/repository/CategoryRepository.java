@@ -13,7 +13,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findByUuid(String uuid);
 
-    Optional<Category> findByUuidAndUser_UuidAndStatus(String name, String uuid, String status);
+    Optional<Category> findByUuidAndUser_UuidAndStatus(String uuid, String userUuid, String status);
 
     boolean existsByNameAndUser_UuidAndStatus(String name, String uuid, String status);
 

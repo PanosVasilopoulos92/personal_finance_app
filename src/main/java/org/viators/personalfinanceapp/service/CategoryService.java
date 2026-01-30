@@ -71,6 +71,10 @@ public class CategoryService {
         Category categoryToUpdate = categoryRepository.findByUuidAndUser_UuidAndStatus(categoryUuid, userUuid, StatusEnum.ACTIVE.getCode())
                 .orElseThrow(() -> new ResourceNotFoundException("No category found with this uuid for this currentUser"));
 
+        if (categoryRepository.existsByNameAndUser_UuidAndStatus(request.newName(), userUuid, StatusEnum.ACTIVE.getCode())) {
+            throw new DuplicateResourceException("There is already one category with same name for user.");
+        }
+
         request.updateFields(categoryToUpdate);
         return CategorySummaryResponse.from(categoryToUpdate);
     }

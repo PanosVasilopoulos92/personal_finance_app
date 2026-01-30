@@ -13,7 +13,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder()
+@SuperBuilder
+@ToString(callSuper = true)
 public class Category extends BaseEntity {
 
     @Column(name = "category_name", nullable = false, length = 50)
