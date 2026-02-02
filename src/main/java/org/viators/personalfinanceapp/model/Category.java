@@ -27,16 +27,30 @@ public class Category extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(
+            name = "categories_items",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id")
+    )
     private List<Item> items = new ArrayList<>();
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<InflationReport> inflationReports = new ArrayList<>();
 
+    // Helper methods
     public void addUser(User user) {
         if (user != null) {
             this.user = user;
             this.user.getCategories().add(this);
         }
     }
+
+    public void addItem(Item item) {
+        if (item != null) {
+            this.items.add(item);
+            item.getCategories().add(this);
+        }
+    }
+
 }

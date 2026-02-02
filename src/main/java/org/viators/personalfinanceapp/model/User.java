@@ -13,10 +13,7 @@ import java.util.List;
 @Table(
         name = "users",
         indexes = {
-                @Index(name = "idx_user_email", columnList = "email", unique = true),
-                @Index(name = "idx_user_username", columnList = "username", unique = true),
-                @Index(name = "idx_user_lastName", columnList = "lastName", unique = true),
-                @Index(name = "idx_user_uuid", columnList = "uuid")
+                @Index(name = "idx_user_lastname", columnList = "lastname")
         }
 )
 @Getter
@@ -52,7 +49,13 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserPreferences userPreferences;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(
+            name = "users_items",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id")
+    )
+    @Builder.Default
     private List<Item> items = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -60,18 +63,23 @@ public class User extends BaseEntity {
     private List<Category> categories = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<PriceAlert> priceAlerts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<ShoppingList> shoppingLists = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<InflationReport> inflationReports = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<PriceComparison> priceComparisons = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Basket> baskets = new ArrayList<>();
 
     @Override
@@ -87,13 +95,6 @@ public class User extends BaseEntity {
     }
 
     // Helper methods
-    public void addItem(Item item) {
-        if (item != null) {
-            this.items.add(item);
-            item.setUser(this);
-        }
-    }
-
     public void addCategory(Category category) {
         if (category != null) {
             this.categories.add(category);

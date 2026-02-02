@@ -1,10 +1,8 @@
 package org.viators.personalfinanceapp.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.viators.personalfinanceapp.model.enums.ItemUnitEnum;
 
 import java.util.ArrayList;
@@ -16,6 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 public class Item extends BaseEntity {
 
     @Column(name = "name", nullable = false)
@@ -31,43 +30,46 @@ public class Item extends BaseEntity {
     @Column(name = "brand")
     private String brand;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @ManyToMany(mappedBy = "items")
+    @Builder.Default
+    private List<User> users = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @ManyToMany(mappedBy = "items")
+    @Builder.Default
+    private List<Category> categories = new ArrayList<>();
 
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<PriceObservation> priceObservation = new ArrayList<>();
 
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<PriceAlert> priceAlerts = new ArrayList<>();
 
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<ShoppingListItem> shoppingListItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<PriceComparison> priceComparisons = new ArrayList<>();
-
-    // Simple case
-//    /**
-//     * mappedBy = "items" tells JPA that the Basket entity owns the relationship.
-//     * The "items" refers to the field name in the Basket class.
-//     * <p>
-//     * This is the "inverse side" or "non-owning side" of the relationship.
-//     * JPA will not create another join table - it uses the one defined in Basket.
-//     */
-//    @ManyToMany(mappedBy = "items")
-//    private List<Basket> baskets = new ArrayList<>();
-
 
     // Approach of creating a new Join Entity to represent the relationship between Item and Basket, plus some extra field
     @OneToMany(mappedBy = "item", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @Builder.Default
     private List<BasketItem> basketItems = new ArrayList<>();
 
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<Price> prices;
+
     // Helper methods
+    public void addUser(User user) {
+        if (user != null) {
+            this.users.add(user);
+            user.getItems().add(this);
+        }
+    }
+
     public void addPriceObservation(PriceObservation priceObservation) {
         if (priceObservation != null) {
             this.priceObservation.add(priceObservation);
