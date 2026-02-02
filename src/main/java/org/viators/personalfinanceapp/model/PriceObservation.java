@@ -18,27 +18,27 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class PriceObservation extends BaseEntity {
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price", nullable = false, updatable = false)
     private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "currency", nullable = false)
+    @Column(name = "currency", nullable = false, updatable = false)
     private CurrencyEnum currency;
 
-    @Column(name = "observation_date", nullable = false)
+    @Column(name = "observation_date", nullable = false, updatable = false)
     private LocalDate observationDate;
 
-    @Column(name = "location", nullable = false)
+    @Column(name = "location", nullable = false, updatable = false)
     private String location; // city or region
 
-    @Column(name = "notes", length = 800)
+    @Column(name = "notes", length = 400)
     private String notes;
 
     @ManyToOne
-    @JoinColumn(name = "item_id", nullable = false)
+    @JoinColumn(name = "item_id", nullable = false, updatable = false)
     private Item item;
 
     @ManyToOne
-    @JoinColumn(name = "store_id", nullable = false)
+    @JoinColumn(name = "store_id", nullable = false, updatable = false)
     private Store store;
 }

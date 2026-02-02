@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
     Optional<Store> findByUuid(String uuid);
+
+    Optional<Store> findByName(String name);
 }

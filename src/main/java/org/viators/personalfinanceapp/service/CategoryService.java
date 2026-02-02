@@ -13,9 +13,11 @@ import org.viators.personalfinanceapp.dto.category.response.CategorySummaryRespo
 import org.viators.personalfinanceapp.exceptions.DuplicateResourceException;
 import org.viators.personalfinanceapp.exceptions.ResourceNotFoundException;
 import org.viators.personalfinanceapp.model.Category;
+import org.viators.personalfinanceapp.model.Item;
 import org.viators.personalfinanceapp.model.User;
 import org.viators.personalfinanceapp.model.enums.StatusEnum;
 import org.viators.personalfinanceapp.repository.CategoryRepository;
+import org.viators.personalfinanceapp.repository.ItemRepository;
 import org.viators.personalfinanceapp.repository.UserRepository;
 
 @Service
@@ -26,6 +28,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final ItemRepository itemRepository;
 
     public CategoryDetailsResponse getCategoryWithDetails(String userUuid, String categoryUuid) {
         Category result = categoryRepository.findCategoryWithRelationships(userUuid, categoryUuid)
@@ -87,5 +90,36 @@ public class CategoryService {
         categoryToArchive.setStatus(StatusEnum.INACTIVE.getCode());
     }
 
+    @Transactional
+    public CategoryDetailsResponse addItem(String userUuid, String categoryUuid, String itemUuid) {
+        Category category = categoryRepository.findByUuidAndUser_Uuid(categoryUuid, userUuid)
+                .orElseThrow(() -> new ResourceNotFoundException("No category exist with this uuid"));
+
+        Item item = itemRepository.findByUuidAndUser_Uuid(itemUuid, userUuid)
+                .orElseThrow(() -> new ResourceNotFoundException("No such item exist"));
+
+        if (category.getItems().contains(item)) {
+            throw  new DuplicateResourceException("Item already exists in this category");
+        }
+
+        category.addItem(item);
+        return CategoryDetailsResponse.from(category);
+    }
+
+    public CategoryDetailsResponse removeItem(String userUuid, String categoryUuid, String itemUuid) {
+        Category category = categoryRepository.findByUuidAndUser_Uuid(categoryUuid, userUuid)
+                .orElseThrow(() -> new ResourceNotFoundException("No category exist with this uuid"));
+
+        Item item = itemRepository.findByUuidAndUser_Uuid(itemUuid, userUuid)
+                .orElseThrow(() -> new ResourceNotFoundException("No such item exist"));
+
+        if (!category.getItems().contains(item)) {
+            throw  new IllegalArgumentException("Item does not exists in this category");
+        }
+
+        category.removeItem(item);
+
+        return CategoryDetailsResponse.from(category);
+    }
 
 }

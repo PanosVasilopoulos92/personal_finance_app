@@ -13,7 +13,7 @@ import org.viators.personalfinanceapp.dto.user.response.UserAuthResponse;
 import org.viators.personalfinanceapp.service.AuthService;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {

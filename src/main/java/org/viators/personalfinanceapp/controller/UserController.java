@@ -14,7 +14,7 @@ import org.viators.personalfinanceapp.dto.user.response.UserSummaryResponse;
 import org.viators.personalfinanceapp.service.UserService;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {

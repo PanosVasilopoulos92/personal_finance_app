@@ -30,17 +30,21 @@ public class Item extends BaseEntity {
     @Column(name = "brand")
     private String brand;
 
-    @ManyToMany(mappedBy = "items")
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(name = "is_favorite", nullable = false)
     @Builder.Default
-    private List<User> users = new ArrayList<>();
+    private Boolean isFavorite = false;
 
     @ManyToMany(mappedBy = "items")
     @Builder.Default
     private List<Category> categories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<PriceObservation> priceObservation = new ArrayList<>();
+    private List<PriceObservation> priceObservations = new ArrayList<>();
 
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
     @Builder.Default
@@ -54,26 +58,28 @@ public class Item extends BaseEntity {
     @Builder.Default
     private List<PriceComparison> priceComparisons = new ArrayList<>();
 
-    // Approach of creating a new Join Entity to represent the relationship between Item and Basket, plus some extra field
+    // Creates a new Join Entity to represent the relationship between Item and Basket, plus some extra field
     @OneToMany(mappedBy = "item", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @Builder.Default
     private List<BasketItem> basketItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    private List<Price> prices;
-
     // Helper methods
-    public void addUser(User user) {
-        if (user != null) {
-            this.users.add(user);
-            user.getItems().add(this);
+    public void addPriceObservation(PriceObservation priceObservation) {
+        if (priceObservation != null) {
+            this.priceObservations.add(priceObservation);
+            priceObservation.setItem(this);
         }
     }
 
-    public void addPriceObservation(PriceObservation priceObservation) {
-        if (priceObservation != null) {
-            this.priceObservation.add(priceObservation);
-            priceObservation.setItem(this);
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Item that)) return false;
+        return getUuid() != null && getUuid().equals(that.getUuid());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

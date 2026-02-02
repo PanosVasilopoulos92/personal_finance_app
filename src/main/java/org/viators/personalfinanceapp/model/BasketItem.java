@@ -34,7 +34,6 @@ public class BasketItem extends BaseEntity {
     private BigDecimal quantity = BigDecimal.ONE;
 
     // Helper methods
-
     public void setBasket(Basket basket) {
         if (this.basket != null) {
             this.basket.getBasketItems().remove(this);

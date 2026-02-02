@@ -38,6 +38,18 @@ public class Category extends BaseEntity {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<InflationReport> inflationReports = new ArrayList<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Category that)) return false;
+        return getUuid() != null && getUuid().equals(that.getUuid());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
     // Helper methods
     public void addUser(User user) {
         if (user != null) {
@@ -50,6 +62,13 @@ public class Category extends BaseEntity {
         if (item != null) {
             this.items.add(item);
             item.getCategories().add(this);
+        }
+    }
+
+    public void removeItem(Item item) {
+        if (item != null && this.getItems().contains(item) && item.getCategories().contains(this)) {
+            this.items.remove(item);
+            item.getCategories().remove(this);
         }
     }
 

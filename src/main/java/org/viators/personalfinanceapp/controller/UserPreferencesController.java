@@ -12,7 +12,7 @@ import org.viators.personalfinanceapp.repository.UserRepository;
 import org.viators.personalfinanceapp.service.UserPreferencesService;
 
 @RestController
-@RequestMapping("api/user-preferences")
+@RequestMapping("api/v1/user-preferences")
 @RequiredArgsConstructor
 @Slf4j
 public class UserPreferencesController {

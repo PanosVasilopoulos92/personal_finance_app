@@ -49,16 +49,11 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserPreferences userPreferences;
 
-    @ManyToMany
-    @JoinTable(
-            name = "users_items",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "item_id")
-    )
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Item> items = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<Category> categories = new ArrayList<>();
 
@@ -99,6 +94,13 @@ public class User extends BaseEntity {
         if (category != null) {
             this.categories.add(category);
             category.setUser(this);
+        }
+    }
+
+    public void addItem(Item item) {
+        if (item != null) {
+            this.getItems().add(item);
+            item.setUser(this);
         }
     }
 

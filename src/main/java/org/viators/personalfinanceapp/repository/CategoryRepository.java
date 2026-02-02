@@ -5,19 +5,29 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import org.viators.personalfinanceapp.model.Category;
 
+import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findByUuid(String uuid);
+
+    Optional<Category> findByUuidAndUser_Uuid(String categoryUuid, String userUuid);
 
     Optional<Category> findByUuidAndUser_UuidAndStatus(String uuid, String userUuid, String status);
 
     boolean existsByNameAndUser_UuidAndStatus(String name, String uuid, String status);
 
+    List<Category> findByUser(Long userId);
+
+
+
     Page<Category> findByUser_Uuid(String userUuid, Pageable pageable);
+
 
     @Query(value = """
             select c from Category c
