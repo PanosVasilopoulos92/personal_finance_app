@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,17 +24,11 @@ public class ShoppingList extends BaseEntity {
     @Column(name = "description", length = 300)
     private String description;
 
-    @Column(name = "target_date", nullable = false)
-    private LocalDate targetDate;
-
-    @Column(name = "estimated_total")
-    private BigDecimal estimatedTotal;
-
-    @Column(name = "actual_total")
-    private BigDecimal actualTotal;
+    @Column(name = "total_amount")
+    private BigDecimal totalAmount;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User user;
 
     @OneToMany(mappedBy = "shoppingList", fetch = FetchType.LAZY)
